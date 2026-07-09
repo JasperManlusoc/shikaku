@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Shikaku"/>
-<title>Shikaku – Divide by Boxes</title>
+<title>Shikaku</title>
 
 <!-- SVG ICONS — inline, zero CDN dependency -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="svg-defs">
@@ -264,7 +264,18 @@ input[type=checkbox]:checked~.toggle-track::after{transform:translateX(20px);}
 .win-stat-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);}
 
 /* OFFLINE */
-#offline-badge{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--amber);color:#1A1C2E;padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.35);z-index:300;pointer-events:none;display:none;}
+#offline-badge{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  padding:6px 16px;border-radius:20px;
+  font-size:.75rem;font-weight:800;
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  z-index:300;pointer-events:none;
+  opacity:0;display:flex;align-items:center;gap:6px;
+  transition:opacity 0.4s ease;
+  white-space:nowrap;
+}
+#offline-badge.offline-mode{background:var(--amber);color:#1A1C2E;}
+#offline-badge.online-mode{background:#77B255;color:#fff;}
 #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:150;display:none;}
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px;}
@@ -1011,10 +1022,36 @@ async function boot(){
     S.puzzle=getPuzzle(S.level); // re-generate same puzzle from seed
   }
   renderHome();showScreen('home');
+  // ── Connectivity badge — shows for 5s then fades out ──
   const badge=q('offline-badge');
-  window.addEventListener('online',()=>{if(badge)badge.style.display='none';});
-  window.addEventListener('offline',()=>{if(badge)badge.style.display='block';});
-  if(!navigator.onLine&&badge)badge.style.display='block';
+  let _badgeTimer=null;
+
+  function showBadge(isOnline){
+    if(!badge)return;
+    // Clear any running auto-hide timer
+    clearTimeout(_badgeTimer);
+    // Set content and style
+    if(isOnline){
+      badge.innerHTML='<svg style="width:1em;height:1em;display:inline-block;vertical-align:middle"><use href="#e-sound"/></svg> Online';
+      badge.className='online-mode';
+    } else {
+      badge.innerHTML='<svg style="width:1em;height:1em;display:inline-block;vertical-align:middle"><use href="#e-offline"/></svg> Offline';
+      badge.className='offline-mode';
+    }
+    // Fade in
+    badge.style.display='flex';
+    requestAnimationFrame(()=>{ badge.style.opacity='1'; });
+    // Auto-hide after 5 seconds
+    _badgeTimer=setTimeout(()=>{
+      badge.style.opacity='0';
+      setTimeout(()=>{ badge.style.display='none'; },400);
+    },5000);
+  }
+
+  window.addEventListener('online', ()=>showBadge(true));
+  window.addEventListener('offline',()=>showBadge(false));
+  // Show offline badge on load only if already offline
+  if(!navigator.onLine) showBadge(false);
 
   // Buttons
   q('btn-play').addEventListener('click',()=>{Sound.click();startLevel(1);});
