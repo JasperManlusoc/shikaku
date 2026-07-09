@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#1A1C2E"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Shikaku"/>
+<title>Shikaku – Divide by Boxes</title>
+
+<!-- SVG ICONS — inline, zero CDN dependency -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="svg-defs">
+  <symbol id="i-play"    viewBox="0 0 256 256"><path fill="currentColor" d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></symbol>
+  <symbol id="i-pause"   viewBox="0 0 256 256"><path fill="currentColor" d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48Zm-96,0V208a16,16,0,0,1-16,16H64a16,16,0,0,1-16-16V48A16,16,0,0,1,64,32h40A16,16,0,0,1,120,48Z"/></symbol>
+  <symbol id="i-house"   viewBox="0 0 256 256"><path fill="currentColor" d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53.11l80,75.48A16,16,0,0,1,224,115.55Z"/></symbol>
+  <symbol id="i-arrow-left"  viewBox="0 0 256 256"><path fill="currentColor" d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 256 256"><path fill="currentColor" d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H32a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></symbol>
+  <symbol id="i-undo"    viewBox="0 0 256 256"><path fill="currentColor" d="M224,128a96,96,0,0,1-96,96,96.34,96.34,0,0,1-81.85-45.6,8,8,0,0,1,13.7-8.27A80,80,0,1,0,60.27,83.41L44.69,99H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V59a8,8,0,0,1,16,0V86.37L48.28,70.14A96,96,0,0,1,224,128Z"/></symbol>
+  <symbol id="i-redo"    viewBox="0 0 256 256"><path fill="currentColor" d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16h28.69L196.12,79.43a79.94,79.94,0,1,0,1.17,113.28,8,8,0,1,1,11.27,11.35A96,96,0,1,1,195.0,66.92l16.91,16.91V56a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-eraser"  viewBox="0 0 256 256"><path fill="currentColor" d="M225,80.4,183.6,39a16,16,0,0,0-22.62,0L36.69,163.31a16,16,0,0,0,0,22.63L58.75,208H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16H159.31L225,103A16,16,0,0,0,225,80.4Zm-11.31,11.31L184,121.37,134.63,72,164,42.63a0,0,0,0,1,0,0ZM48,208,123.31,132.69,172.69,182,127.32,208Z"/></symbol>
+  <symbol id="i-timer"   viewBox="0 0 256 256"><path fill="currentColor" d="M128,40a96,96,0,1,0,96,96A96.11,96.11,0,0,0,128,40Zm0,176a80,80,0,1,1,80-80A80.09,80.09,0,0,1,128,216Zm45.66-125.66-48,48a8,8,0,0,1-11.32-11.32l48-48a8,8,0,0,1,11.32,11.32ZM96,16a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,16Z"/></symbol>
+  <symbol id="i-gear"    viewBox="0 0 256 256"><path fill="currentColor" d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-32a87.55,87.55,0,0,1-1.19,14.2l16.6,11.87a8,8,0,0,1,1.82,10.51l-16,27.71a8,8,0,0,1-9.7,3.38l-19.54-7.85a88.08,88.08,0,0,1-24.56,14.2l-2.94,20.72a8,8,0,0,1-7.9,6.86H104a8,8,0,0,1-7.9-6.86l-2.94-20.72a88.08,88.08,0,0,1-24.56-14.2L49.06,285.67a8,8,0,0,1-9.7-3.38l-16-27.71a8,8,0,0,1,1.82-10.51l16.6-11.87A87.88,87.88,0,0,1,40,208a87.55,87.55,0,0,1,1.19-14.2L24.59,181.93a8,8,0,0,1-1.82-10.51l16-27.71a8,8,0,0,1,9.7-3.38l19.54,7.85a88.08,88.08,0,0,1,24.56-14.2l2.94-20.72A8,8,0,0,1,104,106h48a8,8,0,0,1,7.9,6.86l2.94,20.72a88.08,88.08,0,0,1,24.56,14.2l19.54-7.85a8,8,0,0,1,9.7,3.38l16,27.71a8,8,0,0,1-1.82,10.51l-16.6,11.87A87.55,87.55,0,0,1,216,208Z"/></symbol>
+  <symbol id="i-question" viewBox="0 0 256 256"><path fill="currentColor" d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180Zm-12-108c-23.14,0-42,17.91-42,40v4a8,8,0,0,0,16,0v-4c0-13.23,11.66-24,26-24s26,10.77,26,24-11.66,24-26,24a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72C159.26,148.55,178,131.06,178,112,178,89.91,159.14,72,128,72Zm100,56A100,100,0,1,1,128,28,100.11,100.11,0,0,1,228,128Zm-16,0a84,84,0,1,0-84,84A84.09,84.09,0,0,0,212,128Z"/></symbol>
+  <symbol id="i-info"    viewBox="0 0 256 256"><path fill="currentColor" d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a16,16,0,1,1,16,16A16,16,0,0,1,112,84Z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 256 256"><path fill="currentColor" d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></symbol>
+  <symbol id="i-upload"  viewBox="0 0 256 256"><path fill="currentColor" d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66-77.66a8,8,0,0,1,11.32,0l40,40a8,8,0,0,1-11.32,11.32L136,91.31V184a8,8,0,0,1-16,0V91.31L93.66,117.66a8,8,0,0,1-11.32-11.32Z"/></symbol>
+  <symbol id="i-trash"   viewBox="0 0 256 256"><path fill="currentColor" d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-check"   viewBox="0 0 256 256"><path fill="currentColor" d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol>
+  <symbol id="i-replay"  viewBox="0 0 256 256"><path fill="currentColor" d="M240,56V96a8,8,0,0,1-8,8H192a8,8,0,0,1,0-16h24.37L199.5,72.13c-.06-.06-.12-.13-.18-.19a80,80,0,1,0,1.47,114.78,8,8,0,1,1,11,11.64A96,96,0,1,1,215.83,75.28L232,91V56a8,8,0,0,1,16,0Z"/></symbol>
+  <symbol id="i-sound-on" viewBox="0 0 256 256"><path fill="currentColor" d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.45V91.55l56-43.19Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-11.88-10.68,24,24,0,0,0,0-31.52A8,8,0,1,1,198,101.56Z"/></symbol>
+
+  <!-- Emoji SVGs — cross-platform, no OS font dependency -->
+  <symbol id="e-palette" viewBox="0 0 36 36">
+    <ellipse cx="18" cy="21" rx="13" ry="11" fill="#F4900C"/>
+    <ellipse cx="18" cy="21" rx="10" ry="8" fill="#FFD983"/>
+    <circle cx="10" cy="15" r="3" fill="#DD2E44"/>
+    <circle cx="15" cy="10" r="3" fill="#FFCC4D"/>
+    <circle cx="21" cy="10" r="3" fill="#77B255"/>
+    <circle cx="26" cy="15" r="3" fill="#55ACEE"/>
+    <ellipse cx="25" cy="29" rx="4" ry="3.5" fill="#5C3315"/>
+    <ellipse cx="25" cy="28" rx="3.2" ry="2.8" fill="#8D5524"/>
+  </symbol>
+  <symbol id="e-sound" viewBox="0 0 36 36">
+    <path d="M6 13h5l8-6v22l-8-6H6z" fill="#CCD6DD"/>
+    <path d="M22 12a7 7 0 0 1 0 12" stroke="#66757F" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M25 8a12 12 0 0 1 0 20" stroke="#66757F" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="e-music" viewBox="0 0 36 36">
+    <path d="M13 26V10l16-3v4L17 14v12" fill="#66757F"/>
+    <circle cx="11" cy="26" r="4" fill="#66757F"/>
+    <circle cx="27" cy="22" r="4" fill="#66757F"/>
+  </symbol>
+  <symbol id="e-bolt" viewBox="0 0 36 36">
+    <polygon points="21,2 10,20 18,20 15,34 26,16 18,16" fill="#FFAC33"/>
+  </symbol>
+  <symbol id="e-party" viewBox="0 0 36 36">
+    <path d="M4 32 L17 8 L28 20 Z" fill="#DD2E44"/>
+    <path d="M4 32 L17 8 L12 21 Z" fill="#EA596E"/>
+    <circle cx="27" cy="9" r="5" fill="#FFAC33"/>
+    <circle cx="23" cy="5" r="2" fill="#FFCC4D"/>
+    <circle cx="31" cy="7" r="1.5" fill="#77B255"/>
+    <circle cx="30" cy="16" r="1.5" fill="#55ACEE"/>
+    <circle cx="19" cy="3" r="1.5" fill="#DD2E44"/>
+    <circle cx="33" cy="19" r="1.5" fill="#9266CC"/>
+  </symbol>
+  <symbol id="e-offline" viewBox="0 0 36 36">
+    <rect x="4" y="4" width="28" height="28" rx="4" fill="#66757F"/>
+    <rect x="7" y="7" width="22" height="22" rx="2" fill="#292F33"/>
+    <line x1="9" y1="9" x2="27" y2="27" stroke="#DD2E44" stroke-width="3" stroke-linecap="round"/>
+    <line x1="27" y1="9" x2="9" y2="27" stroke="#DD2E44" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="e-moon" viewBox="0 0 36 36">
+    <path d="M18 4 a14 14 0 1 0 14 14 A10 10 0 0 1 18 4z" fill="#FFCC4D"/>
+  </symbol>
+  <symbol id="e-install" viewBox="0 0 36 36">
+    <rect x="8" y="2" width="20" height="32" rx="3" fill="#66757F"/>
+    <rect x="10" y="5" width="16" height="24" rx="1" fill="#E1E8ED"/>
+    <circle cx="18" cy="31" r="1.5" fill="#E1E8ED"/>
+    <path d="M14 14 L18 19 L22 14" stroke="#55ACEE" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <line x1="18" y1="8" x2="18" y2="19" stroke="#55ACEE" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="13" y1="21" x2="23" y2="21" stroke="#55ACEE" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+</svg>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#1A1C2E;--surface:#252840;--cell:#2E3152;
+  --accent:#F25C8A;--amber:#FFAB2E;--txt:#fff;--txt2:rgba(255,255,255,0.5);
+  --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+  --sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);
+}
+html,body{
+  height:100%;width:100%;overflow:hidden;
+  background:var(--bg);color:var(--txt);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+.icon{display:inline-block;width:1em;height:1em;fill:currentColor;flex-shrink:0;vertical-align:middle;}
+.icon-lg{width:1.35em;height:1.35em;}
+.icon-xl{width:1.7em;height:1.7em;}
+
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden;
+  padding:var(--sat) var(--sar) var(--sab) var(--sal);}
+.screen.hidden{display:none!important;}
+@keyframes scIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+.sc-in{animation:scIn .26s ease both;}
+
+/* DOT BG */
+#screen-home,#screen-howto,#screen-settings,#screen-credits{
+  background:radial-gradient(circle,rgba(255,255,255,.045) 1px,transparent 1px) center/24px 24px,var(--bg);}
+#screen-game{background:var(--bg);}
+
+/* GAME TOPBAR */
+#game-topbar{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;flex-shrink:0;gap:8px;}
+
+/* BOARD CONTAINER — fills all remaining space */
+#board-container{
+  flex:1;min-height:0;min-width:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:8px 12px;overflow:hidden;position:relative;}
+
+/* GAME BOARD */
+#game-board{
+  display:grid;touch-action:none;
+  /* gap and padding set by JS to match cell sizing */
+  background:rgba(0,0,0,.45);border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.1),0 8px 32px rgba(0,0,0,.45);}
+
+/* CELLS */
+.sh-cell{
+  background:var(--cell);display:flex;align-items:center;justify-content:center;
+  cursor:crosshair;position:relative;
+  transition:background .07s,border-radius .07s;min-width:0;min-height:0;}
+.sh-cell.sh-numbered{font-weight:800;z-index:2;}
+.sh-cell.sh-numbered span{position:relative;z-index:3;color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,.5);pointer-events:none;line-height:1;}
+.sh-drag-preview{outline:2px solid rgba(255,255,255,.5);}
+/* n=1 locked cells — pre-solved, shaded, not interactive */
+.sh-cell.sh-locked{
+  cursor:default!important;
+  border-radius:8px!important;
+  pointer-events:none;
+}
+.sh-cell.sh-locked::after{
+  content:'✓';
+  position:absolute;
+  bottom:1px;right:3px;
+  font-size:0.5em;
+  color:rgba(255,255,255,0.5);
+  pointer-events:none;
+}
+
+/* DRAG BUBBLE */
+.drag-bubble{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:.78rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(242,92,138,.5);pointer-events:none;z-index:20;}
+
+/* ACTIONS BAR */
+#game-actions{flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  gap:20px;padding:10px 16px 14px;}
+
+/* CIRCLE BUTTONS */
+.btn-c{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  transition:transform .12s,box-shadow .12s,opacity .12s;position:relative;flex-shrink:0;}
+.btn-c:active{transform:scale(.88)!important;}
+.btn-c:disabled{opacity:.32;pointer-events:none;}
+.btn-c-pink{background:var(--accent);box-shadow:0 4px 18px rgba(242,92,138,.5);color:#fff;}
+.btn-c-pink:hover{box-shadow:0 6px 24px rgba(242,92,138,.7);transform:translateY(-1px);}
+.btn-c-muted{background:rgba(255,255,255,.1);color:var(--txt);}
+.btn-c-muted:hover{background:rgba(255,255,255,.18);}
+.badge{position:absolute;top:-3px;right:-3px;width:20px;height:20px;border-radius:50%;
+  background:#fff;color:#1A1C2E;font-size:.7rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.4);}
+.btn-top{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.1);color:var(--txt);
+  transition:background .14s,transform .1s;font-size:1.1rem;flex-shrink:0;}
+.btn-top:active{transform:scale(.88);}
+.btn-top:hover{background:rgba(255,255,255,.2);}
+.timer-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);
+  border-radius:20px;padding:7px 13px;}
+.timer-txt{font-size:.9rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.level-wrap{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.level-lbl{font-size:1.05rem;font-weight:900;}
+.diff-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--txt2);}
+
+/* HOME */
+#screen-home{align-items:center;justify-content:center;}
+.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:28px;}
+.logo-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  gap:4px;width:62px;height:62px;padding:9px;background:var(--accent);border-radius:17px;
+  box-shadow:0 8px 32px rgba(242,92,138,.45);margin-bottom:12px;
+  animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 8px 32px rgba(242,92,138,.45);}50%{box-shadow:0 12px 44px rgba(242,92,138,.7);}}
+.logo-dot{border-radius:2px;background:rgba(255,255,255,.22);}
+.logo-dot.on{background:rgba(255,255,255,.9);}
+.home-title{font-size:1.85rem;font-weight:900;letter-spacing:-.02em;line-height:1;}
+.home-sub{font-size:.75rem;font-weight:600;color:var(--txt2);letter-spacing:.18em;text-transform:uppercase;margin-top:3px;}
+.home-menu{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;padding:0 20px;}
+.btn-pill{display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:14px 22px;border-radius:999px;border:none;cursor:pointer;
+  font-size:.95rem;font-weight:700;color:#fff;transition:transform .12s,box-shadow .12s;}
+.btn-pill:active{transform:scale(.95);}
+.btn-pill-pink{background:var(--accent);box-shadow:0 4px 20px rgba(242,92,138,.45);}
+.btn-pill-pink:hover{box-shadow:0 6px 28px rgba(242,92,138,.65);transform:translateY(-1px);}
+.btn-pill-muted{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);}
+.btn-pill-muted:hover{background:rgba(255,255,255,.16);}
+.btn-row{display:flex;gap:10px;}
+.btn-row .btn-pill{flex:1;font-size:.85rem;padding:12px 10px;white-space:nowrap;gap:6px;}
+
+/* PAGE SCREENS */
+.page-hdr{display:flex;align-items:center;gap:12px;padding:13px 16px;
+  background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.page-title{font-size:1rem;font-weight:800;}
+.page-body{flex:1;overflow-y:auto;padding:18px 16px;max-width:520px;margin:0 auto;width:100%;}
+.s-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+.s-lbl{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.75);}
+.toggle-wrap{position:relative;}
+.toggle-wrap input[type=checkbox]{display:none;}
+.toggle-track{display:block;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,.15);cursor:pointer;transition:background .2s;position:relative;}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;}
+input[type=checkbox]:checked~.toggle-track{background:var(--accent);}
+input[type=checkbox]:checked~.toggle-track::after{transform:translateX(20px);}
+.sel{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:9px;padding:7px 11px;font-size:.85rem;font-weight:600;cursor:pointer;}
+.sel option{background:#252840;color:#fff;}
+.btn-p{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 18px;border-radius:13px;border:none;cursor:pointer;font-size:.88rem;font-weight:700;width:100%;color:#fff;transition:transform .1s;}
+.btn-p:active{transform:scale(.97);}
+.btn-p-pink{background:var(--accent);}
+.btn-p-muted{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.btn-p-danger{background:rgba(239,68,68,.22);color:#FCA5A5;border:1px solid rgba(239,68,68,.3);}
+.btn-bk{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;transition:background .14s,transform .1s;}
+.btn-bk:active{transform:scale(.88);}
+.btn-bk:hover{background:rgba(255,255,255,.2);}
+.hw-card{background:var(--surface);border-radius:16px;padding:16px;display:flex;gap:14px;margin-bottom:12px;}
+.hw-num{width:33px;height:33px;border-radius:10px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0;}
+.hw-title{font-weight:700;font-size:.92rem;margin-bottom:3px;}
+.hw-txt{font-size:.82rem;color:var(--txt2);line-height:1.55;}
+
+/* MODALS */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.modal-bg.hidden{display:none!important;}
+@keyframes popIn{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+.modal-box{background:var(--surface);border-radius:28px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.08);animation:popIn .25s cubic-bezier(.34,1.56,.64,1) both;}
+.modal-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;}
+.modal-icon-pink{background:rgba(242,92,138,.2);color:var(--accent);}
+.modal-icon-green{background:rgba(123,198,126,.2);color:#7BC67E;}
+.modal-title{font-size:1.25rem;font-weight:900;margin-bottom:4px;}
+.modal-sub{font-size:.82rem;color:var(--txt2);margin-bottom:20px;line-height:1.5;}
+.modal-divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
+.pause-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);}
+.pause-row:last-of-type{border-bottom:none;}
+.pause-row-label{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:600;color:rgba(255,255,255,.8);}
+.win-stats{display:flex;justify-content:center;gap:32px;margin:14px 0 20px;}
+.win-stat-val{font-size:1.5rem;font-weight:900;}
+.win-stat-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);}
+
+/* OFFLINE */
+#offline-badge{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--amber);color:#1A1C2E;padding:5px 14px;border-radius:20px;font-size:.75rem;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.35);z-index:300;pointer-events:none;display:none;}
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:150;display:none;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+.blob{position:absolute;border-radius:50%;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div id="offline-badge"><svg style="width:1em;height:1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-offline"/></svg> Offline</div>
+
+<!-- HOME -->
+<div id="screen-home" class="screen">
+  <div class="blob" style="top:-80px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(242,92,138,.13),transparent 70%)"></div>
+  <div class="blob" style="bottom:-60px;left:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(72,130,249,.1),transparent 70%)"></div>
+  <div class="logo-wrap" id="home-logo">
+    <div class="logo-grid">
+      <div class="logo-dot on"></div><div class="logo-dot on"></div><div class="logo-dot"></div>
+      <div class="logo-dot on"></div><div class="logo-dot on"></div><div class="logo-dot on"></div>
+      <div class="logo-dot"></div><div class="logo-dot on"></div><div class="logo-dot on"></div>
+    </div>
+    <div class="home-title">Shikaku</div>
+  </div>
+  <div class="home-menu">
+    <button id="btn-play" class="btn-pill btn-pill-pink"><svg class="icon icon-lg"><use href="#i-play"/></svg> New Game</button>
+    <button id="btn-continue" class="btn-pill btn-pill-pink" style="display:none"><svg class="icon icon-lg"><use href="#i-arrow-right"/></svg><span id="btn-continue-lbl">Continue — Level 1</span></button>
+    <div class="btn-row">
+      <button id="btn-howto" class="btn-pill btn-pill-muted" style="white-space:nowrap"><svg class="icon" style="width:1em;height:1em;flex-shrink:0"><use href="#i-question"/></svg> How to Play</button>
+      <button id="btn-settings" class="btn-pill btn-pill-muted"><svg class="icon"><use href="#i-gear"/></svg> Settings</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn-credits" class="btn-pill btn-pill-muted"><svg class="icon"><use href="#i-info"/></svg> About</button>
+    </div>
+  </div>
+  <!-- Install App button — shown at bottom when PWA installable -->
+  <div id="install-bar" style="position:absolute;bottom:52px;left:20px;right:20px;display:none">
+    <button id="btn-install" onclick="doInstall()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 20px;border-radius:16px;border:1.5px solid rgba(242,92,138,0.5);background:rgba(242,92,138,0.12);color:var(--accent);font-size:.92rem;font-weight:700;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent">
+      <svg style="width:1.2em;height:1.2em;flex-shrink:0"><use href="#e-install"/></svg>
+      Install Shikaku App
+    </button>
+  </div>
+  <div style="position:absolute;bottom:14px;text-align:center;font-size:.68rem;color:var(--txt2);line-height:1.8">
+    <div style="font-weight:700;letter-spacing:.05em">v1.0.0 · Works Offline</div>
+    <div>Designed &amp; Developed by <span style="color:var(--accent);font-weight:700">Jasper Manlusoc</span></div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="screen-game" class="screen hidden">
+  <div id="game-topbar">
+    <button id="btn-pause" class="btn-top"><svg class="icon icon-lg"><use href="#i-pause"/></svg></button>
+    <div class="level-wrap">
+      <span id="game-level-label" class="level-lbl">Level 1</span>
+      <span id="game-diff-label" class="diff-lbl">Beginner</span>
+    </div>
+    <div class="timer-pill">
+      <svg class="icon" style="width:14px;height:14px;color:var(--txt2)"><use href="#i-timer"/></svg>
+      <span id="game-timer" class="timer-txt">00:00</span>
+    </div>
+    <button id="btn-clear-board" class="btn-top"><svg class="icon icon-lg"><use href="#i-eraser"/></svg></button>
+  </div>
+  <div id="board-container">
+    <div id="game-board"></div>
+  </div>
+  <div id="game-actions">
+    <button id="btn-undo" class="btn-c btn-c-pink" disabled>
+      <svg class="icon icon-lg"><use href="#i-undo"/></svg>
+      <span id="undo-badge" class="badge">3</span>
+    </button>
+    <button id="btn-redo" class="btn-c btn-c-muted" disabled>
+      <svg class="icon icon-lg"><use href="#i-redo"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen hidden">
+  <div class="page-hdr">
+    <button class="btn-bk btn-back"><svg class="icon"><use href="#i-arrow-left"/></svg></button>
+    <span class="page-title">Settings</span>
+  </div>
+  <div class="page-body">
+    <div class="s-row">
+      <span class="s-lbl"><svg style="width:1.1em;height:1.1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-palette"/></svg> Theme</span>
+      <span style="background:rgba(255,255,255,0.1);color:var(--txt);font-size:.82rem;font-weight:700;padding:6px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);letter-spacing:.04em"><svg style="width:0.95em;height:0.95em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-moon"/></svg> Dark</span>
+    </div>
+    <div class="s-row"><span class="s-lbl"><svg style="width:1.1em;height:1.1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-sound"/></svg> Sound Effects</span>
+      <label class="toggle-wrap"><input type="checkbox" id="setting-sound" checked/><span class="toggle-track"></span></label></div>
+    <div class="s-row"><span class="s-lbl"><svg style="width:1.1em;height:1.1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-music"/></svg> Music</span>
+      <label class="toggle-wrap"><input type="checkbox" id="setting-music"/><span class="toggle-track"></span></label></div>
+    <button id="btn-save-settings" class="btn-p btn-p-pink" style="margin-top:20px"><svg class="icon"><use href="#i-check"/></svg> Save Settings</button>
+    <div style="margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)">
+      <button id="btn-reset" class="btn-p btn-p-danger"><svg class="icon"><use href="#i-trash"/></svg> Reset All Progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<div id="screen-howto" class="screen hidden">
+  <div class="page-hdr">
+    <button class="btn-bk btn-back"><svg class="icon"><use href="#i-arrow-left"/></svg></button>
+    <span class="page-title">How to Play</span>
+  </div>
+  <div class="page-body">
+    <div class="hw-card"><div class="hw-num">1</div><div><div class="hw-title">The Goal</div><div class="hw-txt">Divide the entire grid into rectangles. Every cell must belong to exactly one rectangle — no gaps, no overlaps.</div></div></div>
+    <div class="hw-card"><div class="hw-num">2</div><div><div class="hw-title">Numbered Cells</div><div class="hw-txt">Each number = the <strong style="color:#fff">area</strong> of the rectangle it belongs to. A "6" means a 2×3 or 1×6 rectangle covering exactly 6 cells.</div></div></div>
+    <div class="hw-card"><div class="hw-num">3</div><div><div class="hw-title">Draw Rectangles</div><div class="hw-txt"><strong style="color:#fff">Desktop:</strong> Click and drag across cells.<br/><strong style="color:#fff">Mobile:</strong> Touch and drag.<br/><strong style="color:#fff">Erase:</strong> Tap any colored cell to remove its rectangle.</div></div></div>
+    <div class="hw-card"><div class="hw-num">4</div><div><div class="hw-title">Auto-Check</div><div class="hw-txt">No button needed! The puzzle detects a perfect solution instantly and celebrates <svg style="width:1.1em;height:1.1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-party"/></svg></div></div></div>
+    <div class="hw-card"><div class="hw-num">↩</div><div><div class="hw-title">Undo (3 uses)</div><div class="hw-txt">Tap the pink ↩ button to undo your last rectangle. Up to 3 undos available.</div></div></div>
+    <button class="btn-p btn-p-pink btn-back" style="margin-top:8px"><svg class="icon"><use href="#i-play"/></svg> Let's Play!</button>
+  </div>
+</div>
+
+<!-- CREDITS -->
+<div id="screen-credits" class="screen hidden">
+  <div class="page-hdr">
+    <button class="btn-bk btn-back"><svg class="icon"><use href="#i-arrow-left"/></svg></button>
+    <span class="page-title">About</span>
+  </div>
+  <div class="page-body" style="text-align:center">
+    <div class="logo-grid" style="margin:0 auto 14px;width:54px;height:54px">
+      <div class="logo-dot on"></div><div class="logo-dot on"></div><div class="logo-dot"></div>
+      <div class="logo-dot on"></div><div class="logo-dot on"></div><div class="logo-dot on"></div>
+      <div class="logo-dot"></div><div class="logo-dot on"></div><div class="logo-dot on"></div>
+    </div>
+    <div style="font-size:1.4rem;font-weight:900;margin-bottom:3px">Shikaku</div>
+    <div style="font-size:.72rem;color:var(--txt2);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px">Puzzle Game</div>
+    <div style="font-size:.7rem;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:18px">v1.0.0 · Released July 10, 2026</div>
+    <p style="font-size:.84rem;color:var(--txt2);line-height:1.65;margin-bottom:18px">Shikaku (四角に切れ) is a classic Japanese logic puzzle by Nikoli (2007).</p>
+    <div style="background:rgba(255,255,255,.06);border-radius:16px;padding:16px;text-align:left;border:1px solid rgba(255,255,255,.07);margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <p style="font-weight:700;font-size:.88rem;color:var(--accent)"><svg style="width:1em;height:1em;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-bolt"/></svg> What's in v1.0.0</p>
+        <span style="font-size:.65rem;background:rgba(242,92,138,.2);color:var(--accent);padding:2px 8px;border-radius:20px;font-weight:700">Jul 10, 2026</span>
+      </div>
+      <div style="font-size:.82rem;color:var(--txt2);line-height:2.1">
+        ✓ Infinite levels: Beginner → Insane<br/>
+        ✓ Every puzzle guaranteed solvable<br/>
+        ✓ Auto-detects correct solution instantly<br/>
+        ✓ n=1 cells pre-solved &amp; locked<br/>
+        ✓ Pause modal with sound toggle<br/>
+        ✓ Works fully offline · No ads · No account
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:16px;margin-top:4px">
+      <div style="font-size:.7rem;color:var(--txt2);margin-bottom:4px">Designed &amp; Developed by</div>
+      <div style="font-size:1rem;font-weight:900;color:var(--txt)">Jasper Manlusoc</div>
+      <div style="font-size:.72rem;color:var(--accent);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:2px">Game Developer</div>
+      <div style="font-size:.65rem;color:var(--txt2);margin-top:8px">Puzzle concept © Nikoli Co., Ltd.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: PAUSE -->
+<div id="modal-pause" class="modal-bg hidden">
+  <div class="modal-box">
+    <div class="modal-icon modal-icon-pink"><svg class="icon icon-xl"><use href="#i-pause"/></svg></div>
+    <div class="modal-title">Game Paused</div>
+    <div class="modal-sub" id="pause-level-info">Level 1 · Beginner</div>
+    <div class="modal-divider"></div>
+    <div class="pause-row">
+      <span class="pause-row-label"><svg class="icon" style="width:18px;height:18px;color:var(--txt2)"><use href="#i-sound-on"/></svg> Sound Effects</span>
+      <label class="toggle-wrap"><input type="checkbox" id="pause-sound-toggle" checked/><span class="toggle-track"></span></label>
+    </div>
+    <div class="pause-row">
+      <span class="pause-row-label"><svg class="icon" style="width:18px;height:18px;color:var(--txt2)"><use href="#i-timer"/></svg> Time</span>
+      <span id="pause-timer-display" style="font-weight:700;font-size:.9rem">00:00</span>
+    </div>
+    <div class="modal-divider"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+      <button id="btn-resume" class="btn-p btn-p-pink"><svg class="icon"><use href="#i-play"/></svg> Resume</button>
+      <div style="display:flex;gap:10px">
+        <button id="btn-pause-restart" class="btn-p btn-p-muted" style="flex:1"><svg class="icon"><use href="#i-replay"/></svg> Restart</button>
+        <button id="btn-pause-home" class="btn-p btn-p-muted" style="flex:1"><svg class="icon"><use href="#i-house"/></svg> Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: WIN -->
+<div id="modal-win" class="modal-bg hidden">
+  <div class="modal-box">
+    <div class="modal-icon modal-icon-green"><svg style="width:2rem;height:2rem;display:inline-block;vertical-align:middle;flex-shrink:0"><use href="#e-party"/></svg></div>
+    <div class="modal-title" id="win-level">Level 1 Complete!</div>
+    <div class="modal-sub">Puzzle solved perfectly!</div>
+    <div class="win-stats"><div><div class="win-stat-val" id="win-time">00:00</div><div class="win-stat-lbl">Time</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button id="btn-win-next" class="btn-p btn-p-pink"><svg class="icon"><use href="#i-arrow-right"/></svg> Next Level</button>
+      <div style="display:flex;gap:10px">
+        <button id="btn-win-replay" class="btn-p btn-p-muted" style="flex:1"><svg class="icon"><use href="#i-replay"/></svg> Replay</button>
+        <button id="btn-win-home" class="btn-p btn-p-muted" style="flex:1"><svg class="icon"><use href="#i-house"/></svg> Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ALL JAVASCRIPT INLINE — works from file:// with no server
+   ============================================================ */
+
+/* ── IndexedDB ── */
+const DB_NAME='shikaku-db',DB_VER=1,STORE='gameData';
+let _db=null;
+function openDB(){
+  if(_db) return Promise.resolve(_db);
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME,DB_VER);
+    r.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains(STORE))e.target.result.createObjectStore(STORE,{keyPath:'key'});};
+    r.onsuccess=e=>{_db=e.target.result;res(_db);};
+    r.onerror=e=>rej(e.target.error);
+  });
+}
+async function dbSet(k,v){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put({key:k,value:v});tx.oncomplete=()=>res();tx.onerror=e=>rej(e.target.error);});}
+async function dbGet(k){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(k);r.onsuccess=()=>res(r.result?r.result.value:undefined);r.onerror=e=>rej(e.target.error);});}
+async function dbClear(){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=e=>rej(e.target.error);});}
+async function dbGetAll(){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).getAll();r.onsuccess=()=>res(r.result);r.onerror=e=>rej(e.target.error);});}
+
+/* ── Sound ── */
+let _ac=null,_sndOn=true,_musOn=false,_musGain=null,_musTim=[];
+function getAC(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();if(_ac.state==='suspended')_ac.resume();return _ac;}
+function tone({freq=440,type='sine',vol=.12,atk=.01,dur=.15}={}){
+  if(!_sndOn)return;
+  try{const ac=getAC(),o=ac.createOscillator(),g=ac.createGain();
+    o.connect(g);g.connect(ac.destination);o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(0,ac.currentTime);g.gain.linearRampToValueAtTime(vol,ac.currentTime+atk);
+    g.gain.linearRampToValueAtTime(0,ac.currentTime+dur);
+    o.start(ac.currentTime);o.stop(ac.currentTime+dur+.05);}catch(e){}
+}
+const Sound={
+  setEnabled(v){_sndOn=v;},setMusicEnabled(v){_musOn=v;v?startMusic():stopMusic();},
+  click(){tone({freq:600,vol:.08,dur:.08});},
+  cellSelect(){tone({freq:880,type:'triangle',vol:.1,dur:.1});},
+  rectangleComplete(){tone({freq:523,type:'triangle',vol:.12,dur:.2});setTimeout(()=>tone({freq:659,type:'triangle',vol:.12,dur:.2}),80);},
+  levelComplete(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone({freq:f,type:'triangle',vol:.18,dur:.28}),i*120));},
+  undo(){tone({freq:440,type:'triangle',vol:.08,dur:.12});},
+  erase(){tone({freq:300,type:'triangle',vol:.07,dur:.1});}
+};
+function startMusic(){
+  if(!_musOn)return;
+  stopMusic(); // clear any previous instance
+  try{
+    const ac=getAC();
+    // Master gain — soft ambient level
+    _musGain=ac.createGain();
+    _musGain.gain.value=0;
+    _musGain.connect(ac.destination);
+    // Fade in gently
+    _musGain.gain.linearRampToValueAtTime(0.06, ac.currentTime+2);
+
+    // Chord progression: Cmaj → Am → Fmaj → Gmaj (puzzle-calm vibe)
+    // Each chord plays for 3 seconds, loops forever
+    const chords=[
+      [261.63,329.63,392.00],  // C4 E4 G4  — C major
+      [220.00,261.63,329.63],  // A3 C4 E4  — A minor
+      [174.61,220.00,261.63],  // F3 A3 C4  — F major
+      [196.00,246.94,293.66],  // G3 B3 D4  — G major
+    ];
+    const CHORD_DUR=3.0, NOTE_DUR=2.8;
+    let chordIdx=0;
+
+    function playChord(){
+      if(!_musOn)return;
+      const chord=chords[chordIdx%chords.length];
+      chord.forEach((freq,i)=>{
+        const o=ac.createOscillator();
+        const g=ac.createGain();
+        o.type= i===0?'sine':'triangle';
+        o.frequency.value=freq;
+        // Slightly detune each note for warmth
+        o.detune.value=(i-1)*3;
+        g.gain.setValueAtTime(0, ac.currentTime);
+        g.gain.linearRampToValueAtTime(0.35/(i+1), ac.currentTime+0.3);
+        g.gain.linearRampToValueAtTime(0, ac.currentTime+NOTE_DUR);
+        o.connect(g); g.connect(_musGain);
+        o.start(ac.currentTime);
+        o.stop(ac.currentTime+NOTE_DUR+0.1);
+      });
+      chordIdx++;
+      _musTim.push(setTimeout(playChord, CHORD_DUR*1000));
+    }
+    playChord();
+  }catch(e){console.warn('Music error:',e);}
+}
+function stopMusic(){
+  _musTim.forEach(clearTimeout);_musTim=[];
+  if(_musGain){
+    try{_musGain.gain.linearRampToValueAtTime(0,(_ac?.currentTime||0)+0.5);
+      setTimeout(()=>{try{_musGain.disconnect();}catch(e){}},600);}
+    catch(e){}
+    _musGain=null;
+  }
+}
+
+/* ── Puzzle Generator ── */
+function mkRng(seed){let s=(seed>>>0)||1;return{next(){s=Math.imul(s,1664525)+1013904223>>>0;return s/0x100000000;},int(a,b){return a+Math.floor(this.next()*(b-a+1));}};}
+
+function getProfile(level){
+  if(level<=8)  return{gridMin:4,gridMax:5, ratio:.35,label:'Beginner'};
+  if(level<=20) return{gridMin:5,gridMax:6, ratio:.25,label:'Easy'};
+  if(level<=40) return{gridMin:6,gridMax:8, ratio:.18,label:'Medium'};
+  if(level<=65) return{gridMin:8,gridMax:10,ratio:.12,label:'Hard'};
+  return            {gridMin:10,gridMax:20,ratio:.08,label:'Insane'};
+}
+function getGridSize(level){
+  const p=getProfile(level);
+  if(p.gridMin===p.gridMax)return p.gridMin;
+  const bs=level<=8?1:level<=20?9:level<=40?21:level<=65?41:66;
+  const be=level<=8?8:level<=20?20:level<=40?40:level<=65?65:200;
+  return Math.round(p.gridMin+Math.min(1,(level-bs)/(be-bs))*(p.gridMax-p.gridMin));
+}
+
+function generatePuzzle(rows,cols,seed,maxRatio){
+  const total=rows*cols,maxArea=Math.max(2,Math.floor(total*maxRatio));
+  for(let attempt=0;attempt<600;attempt++){
+    const rng=mkRng(seed+attempt*0x9E3779B9);
+    const grid=new Int16Array(total).fill(-1);
+    const idx=(r,c)=>r*cols+c;
+    const rects=[];let covered=0,singles=0,bad=false;
+    while(covered<total){
+      let sr=-1,sc=-1;
+      outer:for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)if(grid[idx(r,c)]===-1){sr=r;sc=c;break outer;}
+      if(sr===-1)break;
+      const cands=[];
+      for(let h=1;sr+h-1<rows;h++){
+        if(h>1){let ok=true;for(let c=sc;c<cols;c++)if(grid[idx(sr+h-1,c)]!==-1){ok=false;break;}if(!ok)break;}
+        for(let w=1;sc+w-1<cols;w++){
+          if(w>1){let ok=true;for(let r=sr;r<sr+h;r++)if(grid[idx(r,sc+w-1)]!==-1){ok=false;break;}if(!ok)break;}
+          const a=h*w;if(a>=2&&a<=maxArea)cands.push([h,w]);
+        }
+      }
+      let ch,cw;
+      if(!cands.length){singles++;if(singles>1){bad=true;break;}ch=1;cw=1;}
+      else{for(let i=cands.length-1;i>0;i--){const j=Math.floor(rng.next()*(i+1));[cands[i],cands[j]]=[cands[j],cands[i]];}[ch,cw]=cands[rng.int(0,Math.min(5,cands.length-1))];}
+      const a=ch*cw,id=rects.length,nr=sr+rng.int(0,ch-1),nc=sc+rng.int(0,cw-1);
+      rects.push({r1:sr,c1:sc,r2:sr+ch-1,c2:sc+cw-1,numR:nr,numC:nc,area:a});
+      for(let r=sr;r<sr+ch;r++)for(let c=sc;c<sc+cw;c++)grid[idx(r,c)]=id;
+      covered+=a;
+    }
+    if(covered===total&&!bad){
+      const numbers=rects.map(({numR:r,numC:c,area:n})=>({r,c,n}));
+      if(numbers.reduce((s,x)=>s+x.n,0)!==total)continue; // verify sum
+      const grid2d=Array.from({length:rows},(_,r)=>Array.from({length:cols},(_,c)=>grid[idx(r,c)]));
+      return{rows,cols,numbers,solution:grid2d};
+    }
+  }
+  // Fallback: 1×2 pairs
+  const grid2d=Array.from({length:rows},()=>Array(cols).fill(-1));
+  const numbers=[];let id=0;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    if(grid2d[r][c]!==-1)continue;
+    if(c+1<cols&&grid2d[r][c+1]===-1){grid2d[r][c]=grid2d[r][c+1]=id;numbers.push({r,c,n:2});}
+    else if(r+1<rows&&grid2d[r+1][c]===-1){grid2d[r][c]=grid2d[r+1][c]=id;numbers.push({r,c,n:2});}
+    else{grid2d[r][c]=id;numbers.push({r,c,n:1});}
+    id++;
+  }
+  return{rows,cols,numbers,solution:grid2d};
+}
+
+function getPuzzle(level){
+  const p=getProfile(level),size=getGridSize(level);
+  const puz=generatePuzzle(size,size,level*0x9E3779B9+0xDEADBEEF,p.ratio);
+  return{id:level,difficulty:p.label,...puz};
+}
+
+/* ── PALETTE ── */
+const PALETTE=['#7BC67E','#9B72CF','#F97048','#F25C8A','#48C9F9','#F5C842','#4ECDC4','#FF8A65','#A29BFE','#55EFC4','#FD79A8','#FDCB6E'];
+const rectColor=id=>PALETTE[id%PALETTE.length];
+
+/* ── STATE ── */
+const S={
+  screen:'home',level:1,puzzle:null,grid:null,rects:[],nextRectId:0,
+  dragStart:null,dragEnd:null,isDragging:false,
+  undoStack:[],redoStack:[],MAX_UNDO:3,
+  timer:0,timerInterval:null,
+  completed:[],inProgress:false,
+  settings:{theme:'dark',sound:true,music:false}
+};
+
+/* ── DB helpers ── */
+async function saveState(){
+  await dbSet('level',S.level);await dbSet('inProgress',S.inProgress);
+  await dbSet('grid',S.grid);await dbSet('rects',S.rects);
+  await dbSet('nextRectId',S.nextRectId);await dbSet('timer',S.timer);
+  await dbSet('undoStack',S.undoStack);await dbSet('redoStack',S.redoStack);
+}
+async function loadState(){
+  S.level=(await dbGet('level'))??1;
+  S.inProgress=(await dbGet('inProgress'))??false;
+  S.completed=(await dbGet('completed'))??[];
+  S.settings=(await dbGet('settings'))??{theme:'dark',sound:true,music:false};
+  // Restore in-progress game data
+  const g=await dbGet('grid'); if(g) S.grid=g;
+  const r=await dbGet('rects'); if(r) S.rects=r;
+  const n=await dbGet('nextRectId'); if(n!==undefined) S.nextRectId=n;
+  const t=await dbGet('timer'); if(t!==undefined) S.timer=t;
+  const u=await dbGet('undoStack'); if(u) S.undoStack=u;
+  const rd=await dbGet('redoStack'); if(rd) S.redoStack=rd;
+}
+
+/* ── Theme ── */
+function applyTheme(t){document.documentElement.style.setProperty('--bg',t==='light'?'#F0F4FF':'#1A1C2E');document.documentElement.style.setProperty('--surface',t==='light'?'#fff':'#252840');document.documentElement.style.setProperty('--cell',t==='light'?'#D8E4FF':'#2E3152');document.documentElement.style.setProperty('--txt',t==='light'?'#1A1C2E':'#fff');document.documentElement.style.setProperty('--txt2',t==='light'?'rgba(26,28,46,0.55)':'rgba(255,255,255,0.5)');}
+
+/* ── Screens ── */
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(e=>e.classList.add('hidden'));
+  const el=q('screen-'+name);
+  if(el){el.classList.remove('hidden');void el.offsetWidth;el.classList.add('sc-in');setTimeout(()=>el.classList.remove('sc-in'),320);}
+  S.screen=name;
+}
+
+/* ── Start level ── */
+function startLevel(level){
+  S.level=level;S.puzzle=getPuzzle(level);
+  const{rows,cols}=S.puzzle;
+  S.grid=Array.from({length:rows},()=>Array(cols).fill(null));
+  S.rects=[];S.nextRectId=0;S.undoStack=[];S.redoStack=[];S.timer=0;S.inProgress=true;
+  // Pre-fill all n=1 cells — they are already solved, locked from interaction
+  S.puzzle.numbers.forEach(({r,c,n})=>{
+    if(n===1){
+      const id=S.nextRectId++;
+      // Pick a warm accent color for locked cells so they look "already solved"
+      const lockedColors=['#7BC67E','#48C9F9','#F5C842','#4ECDC4','#A29BFE','#55EFC4'];
+      const lockColor=lockedColors[id%lockedColors.length];
+      S.rects.push({id,r1:r,c1:c,r2:r,c2:c,color:lockColor,locked:true});
+      S.grid[r][c]=id;
+    }
+  });
+  clearInterval(S.timerInterval);
+  S.timerInterval=setInterval(()=>{S.timer++;updateTimer();},1000);
+  q('game-level-label').textContent='Level '+level;
+  const de=q('game-diff-label');if(de)de.textContent=S.puzzle.difficulty||'';
+  showScreen('game');
+  renderHome();
+  // Double rAF: wait for layout to be painted before measuring container
+  requestAnimationFrame(()=>requestAnimationFrame(()=>renderGame()));
+  updateUndoUI();saveState();
+}
+
+/* ── Render game ── */
+function renderGame(){
+  const{rows,cols,numbers}=S.puzzle;
+  const board=q('game-board'),cont=q('board-container');
+  if(!board||!cont)return;
+  board.innerHTML='';
+  // Measure actual rendered container
+  const cw=cont.clientWidth-28,ch=cont.clientHeight-20;
+  if(cw<10||ch<10){
+    // Container not ready yet — try again next frame
+    requestAnimationFrame(()=>renderGame());return;
+  }
+  // Gap between cells + outer padding of the board element
+  const GAP=2, PAD=3;
+  // Total space consumed by gaps: (cols-1)*GAP + PAD*2 for board padding
+  const totalGapW=(cols-1)*GAP+PAD*2;
+  const totalGapH=(rows-1)*GAP+PAD*2;
+  // Cell size: fit into available container space minus all gap overhead
+  const cs=Math.max(10,Math.floor(Math.min((cw-totalGapW)/cols,(ch-totalGapH)/rows)));
+  // Board pixel dimensions: cells + gaps + padding
+  const boardW=cs*cols+(cols-1)*GAP+PAD*2;
+  const boardH=cs*rows+(rows-1)*GAP+PAD*2;
+  board.style.width=boardW+'px';
+  board.style.height=boardH+'px';
+  board.style.gap=GAP+'px';
+  board.style.padding=PAD+'px';
+  board.style.gridTemplateColumns='repeat('+cols+','+cs+'px)';
+  board.style.gridTemplateRows='repeat('+rows+','+cs+'px)';
+  // Font: scale with cell, capped smaller so numbers never overflow cells
+  const fs=Math.max(9,Math.min(22,Math.floor(cs*0.38)));
+  board.style.fontSize=fs+'px';
+  const nm={};numbers.forEach(({r,c,n})=>{nm[r+','+c]=n;});
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+    const cell=document.createElement('div');
+    cell.className='sh-cell';cell.dataset.r=r;cell.dataset.c=c;
+    const n=nm[r+','+c];
+    if(n!==undefined){
+      cell.classList.add('sh-numbered');
+      const sp=document.createElement('span');sp.textContent=n;cell.appendChild(sp);
+      // Mark n=1 cells as locked (pre-solved)
+      if(n===1) cell.classList.add('sh-locked');
+    }
+    // Round the 4 grid corner cells to match container border-radius
+    const isCorner=(r===0&&c===0)||(r===0&&c===cols-1)||(r===rows-1&&c===0)||(r===rows-1&&c===cols-1);
+    if(isCorner){
+      const tl=(r===0&&c===0)?'9px':'0';
+      const tr=(r===0&&c===cols-1)?'9px':'0';
+      const br=(r===rows-1&&c===cols-1)?'9px':'0';
+      const bl=(r===rows-1&&c===cols-1-cols+1)?'9px':'0'; // won't match, handled below
+      // Simpler: just set the one relevant corner
+      if(r===0&&c===0)      cell.style.borderRadius='9px 0 0 0';
+      if(r===0&&c===cols-1) cell.style.borderRadius='0 9px 0 0';
+      if(r===rows-1&&c===0) cell.style.borderRadius='0 0 0 9px';
+      if(r===rows-1&&c===cols-1) cell.style.borderRadius='0 0 9px 0';
+      cell.dataset.corner='1'; // mark so redrawRects can restore it
+    }
+    board.appendChild(cell);
+  }
+  redrawRects();attachHandlers(board);
+}
+
+/* ── Draw rects ── */
+function redrawRects(){
+  const board=q('game-board');if(!board||!S.puzzle)return;
+  board.querySelectorAll('.sh-cell').forEach(c=>{
+    if(c.classList.contains('sh-locked')) return;
+    c.style.background='';c.style.boxShadow='';c.style.opacity='';c.classList.remove('sh-drag-preview');
+    // Restore corner rounding on grid-edge cells
+    if(c.dataset.corner){
+      const r=+c.dataset.r,col=+c.dataset.c,{rows,cols}=S.puzzle;
+      if(r===0&&col===0)           c.style.borderRadius='9px 0 0 0';
+      else if(r===0&&col===cols-1) c.style.borderRadius='0 9px 0 0';
+      else if(r===rows-1&&col===0) c.style.borderRadius='0 0 0 9px';
+      else if(r===rows-1&&col===cols-1) c.style.borderRadius='0 0 9px 0';
+      else c.style.borderRadius='';
+    } else { c.style.borderRadius=''; }
+  });
+  S.rects.forEach(rect=>{
+    // Paint ALL rects including locked ones — locked get their own color + dimmed look
+    paintRect(board,rect.r1,rect.c1,rect.r2,rect.c2,rect.color,false,rect.locked);
+  });
+  if(S.isDragging&&S.dragStart&&S.dragEnd){
+    const r1=Math.min(S.dragStart.r,S.dragEnd.r),c1=Math.min(S.dragStart.c,S.dragEnd.c);
+    const r2=Math.max(S.dragStart.r,S.dragEnd.r),c2=Math.max(S.dragStart.c,S.dragEnd.c);
+    paintRect(board,r1,c1,r2,c2,'rgba(255,255,255,.2)',true);
+    let bub=q('drag-bubble');
+    if(!bub){bub=document.createElement('div');bub.id='drag-bubble';bub.className='drag-bubble';q('board-container').appendChild(bub);}
+    bub.textContent=(r2-r1+1)*(c2-c1+1);bub.style.display='flex';
+  }else{const b=q('drag-bubble');if(b)b.style.display='none';}
+}
+function paintRect(board,r1,c1,r2,c2,color,isPreview,isLocked){
+  const R='9px'; // match container corner radius
+  const{rows,cols}=S.puzzle;
+  for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++){
+    const cell=board.querySelector('[data-r="'+r+'"][data-c="'+c+'"]');
+    if(!cell)continue;
+    cell.style.background=color;
+    if(isPreview){cell.classList.add('sh-drag-preview');continue;}
+    // Rect inner corners
+    let tl=(r===r1&&c===c1)?R:'0',tr=(r===r1&&c===c2)?R:'0';
+    let br=(r===r2&&c===c2)?R:'0',bl=(r===r2&&c===c1)?R:'0';
+    // Grid edge corners — always round the grid's 4 outer corners
+    if(r===0     &&c===0)      tl=R;
+    if(r===0     &&c===cols-1) tr=R;
+    if(r===rows-1&&c===cols-1) br=R;
+    if(r===rows-1&&c===0)      bl=R;
+    cell.style.borderRadius=tl+' '+tr+' '+br+' '+bl;
+    if(isLocked){
+      // Locked cells: slightly dimmed, no interaction shadow, checkmark tint
+      cell.style.boxShadow='inset 0 0 0 2px rgba(255,255,255,0.25)';
+      cell.style.opacity='0.7';
+    } else {
+      cell.style.boxShadow='inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.18)';
+      cell.style.opacity='';
+    }
+  }
+}
+
+/* ── Input ── */
+function cellAt(x,y){for(const e of document.elementsFromPoint(x,y))if(e.classList.contains('sh-cell'))return{r:+e.dataset.r,c:+e.dataset.c};return null;}
+function attachHandlers(board){
+  board.addEventListener('mousedown',e=>{
+    const c=e.target.closest('.sh-cell');if(!c)return;e.preventDefault();
+    if(c.classList.contains('sh-locked'))return; // locked cell — ignore
+    S.dragStart={r:+c.dataset.r,c:+c.dataset.c};S.dragEnd={...S.dragStart};
+    S.isDragging=true;Sound.cellSelect();redrawRects();
+  });
+  board.addEventListener('mousemove',e=>{
+    if(!S.isDragging)return;const c=cellAt(e.clientX,e.clientY);
+    if(c&&(c.r!==S.dragEnd?.r||c.c!==S.dragEnd?.c)){S.dragEnd=c;redrawRects();}
+  });
+  board.addEventListener('touchstart',e=>{
+    e.preventDefault();const t=e.touches[0],c=cellAt(t.clientX,t.clientY);if(!c)return;
+    // Check if touched cell is locked
+    const el=document.querySelector('[data-r="'+c.r+'"][data-c="'+c.c+'"]');
+    if(el&&el.classList.contains('sh-locked'))return;
+    S.dragStart=c;S.dragEnd={...c};S.isDragging=true;Sound.cellSelect();redrawRects();
+  },{passive:false});
+  board.addEventListener('touchmove',e=>{
+    e.preventDefault();const t=e.touches[0],c=cellAt(t.clientX,t.clientY);
+    if(c&&(c.r!==S.dragEnd?.r||c.c!==S.dragEnd?.c)){S.dragEnd=c;redrawRects();}
+  },{passive:false});
+  board.addEventListener('touchend',e=>{
+    e.preventDefault();S.isDragging=false;
+    const t=e.changedTouches[0],c=cellAt(t.clientX,t.clientY);if(c)S.dragEnd=c;commitRect();
+  });
+}
+
+/* ── Commit rect ── */
+function commitRect(){
+  if(!S.dragStart||!S.dragEnd)return;
+  const r1=Math.min(S.dragStart.r,S.dragEnd.r),c1=Math.min(S.dragStart.c,S.dragEnd.c);
+  const r2=Math.max(S.dragStart.r,S.dragEnd.r),c2=Math.max(S.dragStart.c,S.dragEnd.c);
+  // Single tap = erase existing, or ignore empty
+  if(r1===r2&&c1===c2){
+    const ex=S.grid[r1][c1];
+    if(ex!==null){saveUndo();eraseRect(ex);Sound.erase();S.dragStart=S.dragEnd=null;redrawRects();saveState();return;}
+    S.dragStart=S.dragEnd=null;redrawRects();return;
+  }
+  // Block if any cell in the selection is locked (n=1 pre-solved)
+  for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++){
+    const existId=S.grid[r][c];
+    if(existId!==null){const existRect=S.rects.find(x=>x.id===existId);if(existRect?.locked){S.dragStart=S.dragEnd=null;redrawRects();return;}}
+  }
+  saveUndo();
+  const ids=new Set();
+  for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++)if(S.grid[r][c]!==null)ids.add(S.grid[r][c]);
+  ids.forEach(id=>eraseRect(id));
+  const id=S.nextRectId++,color=rectColor(id);
+  S.rects.push({id,r1,c1,r2,c2,color});
+  for(let r=r1;r<=r2;r++)for(let c=c1;c<=c2;c++)S.grid[r][c]=id;
+  S.dragStart=S.dragEnd=null;
+  Sound.rectangleComplete();redrawRects();autoValidate();saveState();
+}
+function eraseRect(id){
+  const rect=S.rects.find(x=>x.id===id);
+  if(rect?.locked) return; // never erase pre-solved locked cells
+  S.rects=S.rects.filter(x=>x.id!==id);
+  for(let r=0;r<S.puzzle.rows;r++)for(let c=0;c<S.puzzle.cols;c++)if(S.grid[r][c]===id)S.grid[r][c]=null;
+}
+
+/* ── Auto validate ── */
+function autoValidate(){
+  const{rows,cols,numbers}=S.puzzle;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)if(S.grid[r][c]===null)return;
+  const nm={};numbers.forEach(({r,c,n})=>{nm[r+','+c]=n;});
+  for(const rect of S.rects){
+    const area=(rect.r2-rect.r1+1)*(rect.c2-rect.c1+1);
+    const nums=[];
+    for(let r=rect.r1;r<=rect.r2;r++)for(let c=rect.c1;c<=rect.c2;c++)if(nm[r+','+c]!==undefined)nums.push(nm[r+','+c]);
+    if(nums.length!==1||nums[0]!==area)return;
+  }
+  clearInterval(S.timerInterval);Sound.levelComplete();
+  if(!S.completed.find(x=>x.level===S.level)){S.completed.push({level:S.level,time:S.timer});dbSet('completed',S.completed);}
+  S.inProgress=false;
+  setTimeout(()=>{q('win-level').textContent='Level '+S.level+' Complete!';q('win-time').textContent=fmt(S.timer);q('modal-win').classList.remove('hidden');confetti();},280);
+}
+
+/* ── Undo/redo ── */
+function saveUndo(){
+  S.undoStack.push({grid:S.grid.map(r=>[...r]),rects:S.rects.map(r=>({...r})),nid:S.nextRectId});
+  if(S.undoStack.length>S.MAX_UNDO)S.undoStack.shift();S.redoStack=[];updateUndoUI();
+}
+function undo(){
+  if(!S.undoStack.length)return;
+  S.redoStack.push({grid:S.grid.map(r=>[...r]),rects:S.rects.map(r=>({...r})),nid:S.nextRectId});
+  if(S.redoStack.length>S.MAX_UNDO)S.redoStack.shift();
+  const p=S.undoStack.pop();S.grid=p.grid;S.rects=p.rects;S.nextRectId=p.nid;
+  Sound.undo();redrawRects();updateUndoUI();saveState();
+}
+function redo(){
+  if(!S.redoStack.length)return;
+  S.undoStack.push({grid:S.grid.map(r=>[...r]),rects:S.rects.map(r=>({...r})),nid:S.nextRectId});
+  if(S.undoStack.length>S.MAX_UNDO)S.undoStack.shift();
+  const p=S.redoStack.pop();S.grid=p.grid;S.rects=p.rects;S.nextRectId=p.nid;
+  redrawRects();updateUndoUI();saveState();
+}
+function updateUndoUI(){
+  const u=q('btn-undo'),r=q('btn-redo'),b=q('undo-badge');
+  if(u)u.disabled=!S.undoStack.length;if(r)r.disabled=!S.redoStack.length;
+  if(b)b.textContent=S.MAX_UNDO-S.undoStack.length;
+}
+
+/* ── Timer ── */
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function updateTimer(){const e=q('game-timer');if(e)e.textContent=fmt(S.timer);}
+
+/* ── Confetti ── */
+function confetti(){
+  const cv=q('confetti-canvas');if(!cv)return;cv.style.display='block';
+  cv.width=innerWidth;cv.height=innerHeight;const ctx=cv.getContext('2d');
+  const cols=['#7BC67E','#F97048','#F25C8A','#48C9F9','#F5C842','#9B72CF'];
+  const ps=Array.from({length:90},()=>({x:Math.random()*cv.width,y:-10,w:5+Math.random()*8,h:3+Math.random()*5,vx:(Math.random()-.5)*3,vy:1.5+Math.random()*3,rot:Math.random()*Math.PI*2,vr:(Math.random()-.5)*.15,col:cols[Math.floor(Math.random()*cols.length)],a:1}));
+  let f=0;
+  (function draw(){ctx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.a=Math.max(0,1-f/160);ctx.save();ctx.globalAlpha=p.a;ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});f++;if(f<180)requestAnimationFrame(draw);else cv.style.display='none';})();
+}
+
+/* ── Pause modal ── */
+function openPause(){
+  clearInterval(S.timerInterval);
+  const li=q('pause-level-info');if(li)li.textContent='Level '+S.level+' · '+(S.puzzle?.difficulty||'');
+  const td=q('pause-timer-display');if(td)td.textContent=fmt(S.timer);
+  const st=q('pause-sound-toggle');if(st)st.checked=S.settings.sound;
+  q('modal-pause').classList.remove('hidden');
+}
+function closePause(){
+  q('modal-pause').classList.add('hidden');
+  if(S.screen==='game'){clearInterval(S.timerInterval);S.timerInterval=setInterval(()=>{S.timer++;updateTimer();},1000);}
+}
+
+/* ── Home ── */
+function renderHome(){
+  const pb=q('btn-play'),cb=q('btn-continue');
+  if(pb)pb.style.display=S.inProgress?'none':'';
+  if(cb){cb.style.display=S.inProgress?'':'none';const l=q('btn-continue-lbl');if(l)l.textContent='Continue — Level '+S.level;}
+  // install bar handled by beforeinstallprompt event
+}
+
+/* ── PWA Install ── */
+let _dip=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_dip=e;
+  // Show the install bar
+  const bar=q('install-bar');if(bar)bar.style.display='block';
+});
+window.addEventListener('appinstalled',()=>{
+  _dip=null;
+  const bar=q('install-bar');if(bar)bar.style.display='none';
+});
+async function doInstall(){
+  if(!_dip){
+    // Fallback: show install instructions modal
+    alert('To install:\n\n📱 iOS Safari: Tap Share → Add to Home Screen\n🤖 Android Chrome: Tap menu (⋮) → Add to Home Screen\n💻 Desktop Chrome: Click the install icon in the address bar');
+    return;
+  }
+  _dip.prompt();
+  const{outcome}=await _dip.userChoice;
+  if(outcome==='accepted'){
+    _dip=null;
+    const bar=q('install-bar');if(bar)bar.style.display='none';
+  }
+}
+
+/* ── Settings ── */
+function renderSettings(){q('setting-sound').checked=S.settings.sound;q('setting-music').checked=S.settings.music;}
+async function applySettings(){
+  S.settings.theme='dark'; // always dark
+  S.settings.sound=q('setting-sound').checked;S.settings.music=q('setting-music').checked;
+  applyTheme('dark');Sound.setEnabled(S.settings.sound);Sound.setMusicEnabled(S.settings.music);
+  await dbSet('settings',S.settings);Sound.click();showScreen('home');
+}
+
+/* ── Export/Import/Reset ── */
+async function exportSave(){const blob=new Blob([JSON.stringify(await dbGetAll(),null,2)],{type:'application/json'});const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(blob),download:'shikaku-save.json'});a.click();}
+async function resetProgress(){if(!confirm('Reset ALL progress? This cannot be undone.'))return;await dbClear();S.level=1;S.completed=[];S.inProgress=false;S.settings={theme:'dark',sound:true,music:false};renderHome();}
+
+/* ── Boot ── */
+async function boot(){
+  await loadState();
+  applyTheme(S.settings.theme);
+  Sound.setEnabled(S.settings.sound);
+  // Restore in-progress game if any
+  if(S.inProgress&&S.grid&&S.puzzle===null){
+    S.puzzle=getPuzzle(S.level); // re-generate same puzzle from seed
+  }
+  renderHome();showScreen('home');
+  const badge=q('offline-badge');
+  window.addEventListener('online',()=>{if(badge)badge.style.display='none';});
+  window.addEventListener('offline',()=>{if(badge)badge.style.display='block';});
+  if(!navigator.onLine&&badge)badge.style.display='block';
+
+  // Buttons
+  q('btn-play').addEventListener('click',()=>{Sound.click();startLevel(1);});
+  q('btn-continue').addEventListener('click',()=>{Sound.click();
+    // Restore saved game state if available
+    if(S.inProgress&&S.grid){S.puzzle=getPuzzle(S.level);q('game-level-label').textContent='Level '+S.level;const de=q('game-diff-label');if(de)de.textContent=S.puzzle.difficulty||'';showScreen('game');requestAnimationFrame(()=>requestAnimationFrame(()=>renderGame()));clearInterval(S.timerInterval);S.timerInterval=setInterval(()=>{S.timer++;updateTimer();},1000);updateUndoUI();}
+    else startLevel(S.level);
+  });
+  q('btn-howto').addEventListener('click',()=>{Sound.click();showScreen('howto');});
+  q('btn-settings').addEventListener('click',()=>{Sound.click();renderSettings();showScreen('settings');});
+  q('btn-credits').addEventListener('click',()=>{Sound.click();showScreen('credits');});
+  // btn-install uses inline onclick
+  q('btn-undo').addEventListener('click',()=>undo());
+  q('btn-redo').addEventListener('click',()=>redo());
+  q('btn-pause').addEventListener('click',()=>{Sound.click();openPause();});
+  q('btn-clear-board').addEventListener('click',()=>{
+    if(!confirm('Clear all rectangles?'))return;
+    saveUndo();const{rows,cols}=S.puzzle;S.grid=Array.from({length:rows},()=>Array(cols).fill(null));S.rects=[];Sound.erase();redrawRects();saveState();
+  });
+  q('btn-resume').addEventListener('click',()=>{Sound.click();closePause();});
+  q('btn-pause-home').addEventListener('click',()=>{Sound.click();closePause();clearInterval(S.timerInterval);S.inProgress=true;saveState();renderHome();showScreen('home');});
+  q('btn-pause-restart').addEventListener('click',()=>{Sound.click();closePause();startLevel(S.level);});
+  q('pause-sound-toggle').addEventListener('change',e=>{S.settings.sound=e.target.checked;Sound.setEnabled(e.target.checked);dbSet('settings',S.settings);});
+  q('btn-win-next').addEventListener('click',()=>{q('modal-win').classList.add('hidden');Sound.click();startLevel(S.level+1);});
+  q('btn-win-replay').addEventListener('click',()=>{q('modal-win').classList.add('hidden');Sound.click();startLevel(S.level);});
+  q('btn-win-home').addEventListener('click',()=>{q('modal-win').classList.add('hidden');Sound.click();S.inProgress=false;S.level++;saveState();renderHome();showScreen('home');});
+  q('btn-save-settings').addEventListener('click',()=>applySettings());
+  q('btn-reset').addEventListener('click',()=>resetProgress());
+  // export/import removed
+  // import listener removed
+  document.querySelectorAll('.btn-back').forEach(b=>b.addEventListener('click',()=>{Sound.click();showScreen('home');}));
+
+  // Global mouseup
+  document.addEventListener('mouseup',e=>{if(!S.isDragging)return;const c=cellAt(e.clientX,e.clientY);if(c)S.dragEnd=c;S.isDragging=false;commitRect();});
+
+  // Resize
+  const onResize=()=>{if(S.screen==='game')renderGame();};
+  window.addEventListener('resize',onResize);
+  window.visualViewport?.addEventListener('resize',onResize);
+
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    if(S.screen!=='game')return;
+    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
+    if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo();}
+    if(e.key==='Escape'){const pm=q('modal-pause');if(pm&&!pm.classList.contains('hidden'))closePause();else openPause();}
+  });
+}
+
+const q=id=>document.getElementById(id);
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>
