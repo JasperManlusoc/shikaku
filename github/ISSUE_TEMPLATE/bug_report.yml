@@ -1,0 +1,102 @@
+name: "🐞 Bug Report"
+description: "Report a defect found during testing"
+title: "[BUG-MODULE-###] "
+labels: ["type:bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Replace `MODULE` and `###` in the title (e.g. `BUG-AUTH-007`).
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - auth
+        - checkout
+        - search
+        - api
+        - notifications
+        - admin
+        - other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity (technical impact)
+      options:
+        - S1 - Blocker (crash, data loss, no workaround)
+        - S2 - Critical (major function broken)
+        - S3 - Major (function impaired, workaround exists)
+        - S4 - Minor (small impact, cosmetic-adjacent)
+        - S5 - Trivial (cosmetic only)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority (business urgency)
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
+
+  - type: input
+    id: found-in-version
+    attributes:
+      label: Found in version
+      placeholder: "2.3.2"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "Chrome 126 / macOS 14 / staging"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to /login
+        2. Enter a password containing an emoji
+        3. Click "Log in"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected vs actual result
+      placeholder: |
+        Expected: form shows a validation message
+        Actual: server returns 500, page crashes
+    validations:
+      required: true
+
+  - type: input
+    id: related-test-case
+    attributes:
+      label: Related test case
+      description: Issue number of the test case that surfaced this bug, if any
+      placeholder: "#123 (TC-AUTH-001)"
+
+  - type: checkboxes
+    id: flags
+    attributes:
+      label: Flags
+      options:
+        - label: This is a regression (used to work, now broken)
+        - label: Reproducible consistently
+        - label: Screenshots/logs attached below

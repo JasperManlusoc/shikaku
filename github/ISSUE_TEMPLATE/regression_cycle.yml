@@ -1,0 +1,49 @@
+name: "🔁 Regression Cycle"
+description: "Track a full regression run against a specific build/version"
+title: "[REG-VERSION-###] Regression cycle — "
+labels: ["type:regression-cycle"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Replace `VERSION` and `###` in the title (e.g. `REG-2.4.0-001`).
+        Assign this issue to the target Milestone.
+
+  - type: input
+    id: build
+    attributes:
+      label: Build / commit under test
+      placeholder: "v2.4.0-rc1 / commit abc1234"
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "staging"
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Test case checklist
+      description: >
+        List every test case included in this cycle as a task list item.
+        GitHub will show live progress (e.g. "12 of 40 complete").
+      placeholder: |
+        - [ ] #123 TC-AUTH-001
+        - [ ] #124 TC-AUTH-002
+        - [ ] #130 TC-CHECKOUT-014
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Cycle summary (fill in when complete)
+      placeholder: |
+        Pass: 36  Fail: 2  Blocked: 1  Skipped: 1
+        Bugs opened: #201, #202
+        Go/no-go recommendation: ...

@@ -1,0 +1,88 @@
+name: "🧪 Test Case"
+description: "Document a single regression/functional test case"
+title: "[TC-MODULE-###] "
+labels: ["type:test-case"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Replace `MODULE` and `###` in the title above (e.g. `TC-AUTH-001`).
+        Use the next free sequential number for that module — check existing issues first.
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module
+      options:
+        - auth
+        - checkout
+        - search
+        - api
+        - notifications
+        - admin
+        - other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: test-type
+    attributes:
+      label: Test type
+      options:
+        - smoke
+        - regression
+        - sanity
+        - exploratory
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - Critical
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
+
+  - type: input
+    id: preconditions
+    attributes:
+      label: Preconditions
+      description: State/data/environment required before running this test
+      placeholder: "User account exists with role 'admin'; cart contains 1 item"
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Test steps
+      description: Numbered, atomic steps
+      placeholder: |
+        1. Navigate to /login
+        2. Enter valid email and password
+        3. Click "Log in"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      placeholder: "User is redirected to /dashboard and sees their name in the header"
+    validations:
+      required: true
+
+  - type: input
+    id: test-data
+    attributes:
+      label: Test data used
+      placeholder: "qa_user@example.com / TestPass123!"
+
+  - type: input
+    id: related
+    attributes:
+      label: Related requirement / user story
+      placeholder: "#45 or link to spec"

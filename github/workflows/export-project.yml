@@ -1,0 +1,125 @@
+name: Export regression project to CSV
+
+# Runs nightly and on-demand. Commits a CSV snapshot of the Project board
+# (including custom fields) into reports/, since the manual "Export view to
+# CSV" button in the Projects UI can't be scheduled.
+#
+# SETUP REQUIRED before this will work:
+#   1. Set ORG_OR_USER and PROJECT_NUMBER below to match your Project.
+#   2. Create a repo secret PROJECT_TOKEN: a fine-grained PAT (or GitHub App
+#      token) with "read" access to Projects, since the default GITHUB_TOKEN
+#      cannot read Projects v2 data.
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 03:00 UTC daily
+  workflow_dispatch: {}
+
+env:
+  ORG_OR_USER: "OWNER_HERE"     # e.g. "my-org" or "my-username"
+  PROJECT_NUMBER: "1"           # the number shown in the project URL
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch project items via GraphQL
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+        run: |
+          mkdir -p reports
+          gh api graphql -f query='
+            query($login: String!, $number: Int!, $cursor: String) {
+              organization(login: $login) {
+                projectV2(number: $number) {
+                  items(first: 100, after: $cursor) {
+                    pageInfo { hasNextPage endCursor }
+                    nodes {
+                      content {
+                        ... on Issue {
+                          number
+                          title
+                          state
+                          url
+                        }
+                      }
+                      fieldValues(first: 20) {
+                        nodes {
+                          ... on ProjectV2ItemFieldSingleSelectValue {
+                            name
+                            field { ... on ProjectV2FieldCommon { name } }
+                          }
+                          ... on ProjectV2ItemFieldTextValue {
+                            text
+                            field { ... on ProjectV2FieldCommon { name } }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }' \
+            -f login="$ORG_OR_USER" \
+            -F number="$PROJECT_NUMBER" \
+            --paginate > reports/project_raw.json
+
+      - name: Convert to CSV
+        run: |
+          python3 - <<'PY'
+          import json, csv
+
+          with open("reports/project_raw.json") as f:
+              raw = f.read()
+
+          # gh api --paginate concatenates multiple JSON docs; handle both cases
+          decoder = json.JSONDecoder()
+          idx, items = 0, []
+          while idx < len(raw):
+              raw_sub = raw[idx:].lstrip()
+              if not raw_sub:
+                  break
+              obj, end = decoder.raw_decode(raw_sub)
+              items.extend(obj["data"]["organization"]["projectV2"]["items"]["nodes"])
+              idx += len(raw) - len(raw_sub) - (len(raw_sub) - end)
+
+          rows = []
+          fieldnames = set(["number", "title", "state", "url"])
+          for item in items:
+              content = item.get("content") or {}
+              row = {
+                  "number": content.get("number"),
+                  "title": content.get("title"),
+                  "state": content.get("state"),
+                  "url": content.get("url"),
+              }
+              for fv in item["fieldValues"]["nodes"]:
+                  if not fv or "field" not in fv:
+                      continue
+                  fname = fv["field"]["name"]
+                  value = fv.get("name") or fv.get("text")
+                  row[fname] = value
+                  fieldnames.add(fname)
+              rows.append(row)
+
+          fieldnames = ["number", "title", "state", "url"] + sorted(
+              fieldnames - {"number", "title", "state", "url"}
+          )
+          with open("reports/regression_export.csv", "w", newline="") as f:
+              writer = csv.DictWriter(f, fieldnames=fieldnames)
+              writer.writeheader()
+              writer.writerows(rows)
+          PY
+          rm reports/project_raw.json
+
+      - name: Commit CSV
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add reports/regression_export.csv
+          git diff --cached --quiet || git commit -m "chore: nightly regression export"
+          git push
